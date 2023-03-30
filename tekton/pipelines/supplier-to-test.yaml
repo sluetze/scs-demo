@@ -1,0 +1,138 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: scs-download-from-supplier
+  namespace: scs-demo
+spec:
+  description: |
+    This pipeline checks the supplied parameters if the source is valid, downloads the artifacts and starts the security checks
+  params:
+    - name: deployment-name
+      type: string
+      description: name of the deployment to be patched
+    - name: source-git-url-manifest
+      type: string
+      description: url of the source git where the manifests are
+    - name: source-git-revision-manifest
+      type: string
+      description: revision of the source manifest git
+    - name: source-git-url-buildcode
+      type: string
+      description: url of the source git where the sourcecode for the application resides
+    - name: source-git-revision-buildcode
+      type: string
+      description: revision of the source application git
+    - name: source-registry
+      type: string
+      description: name of the source registry
+    - name: dest-git-url-manifest
+      type: string
+      description: url of the dest git where the manifests are
+    - name: dest-git-url-buildcode
+      type: string
+      description: url of the dest git where the sourcecode for the application resides
+    - name: dest-registry
+      type: string
+      description: name of the dest registry
+    - name: IMAGE
+      type: string
+      description: name of the image which shall be build
+
+  tasks:
+    - name: validate-inputs
+      taskRef:
+        name: inputs-validate
+      params:
+        - name: source-fqdns
+          value:
+            - "$(params.source-git-url-buildcode)"
+            - "$(params.source-git-url-manifest)"
+            - "$(params.source-registry)"
+        - name: dest-fqdns
+          value:
+            - "$(params.dest-git-url-buildcode)"
+            - "$(params.dest-git-url-manifest)"
+            - "$(params.dest-registry)"
+    - name: download-image
+      taskRef:
+        name: skopeo-copy
+        kind: Task
+      runAfter:
+        - "validate-inputs"
+      params:
+        - name: srcImageURL
+          value: "$(params.source-registry)/$(params.IMAGE)"
+        - name: destImageURL
+          value: "$(params.dest-registry)/$(params.IMAGE)"
+    - name: check-downloaded-image
+      taskRef:
+        name: check-image
+        kind: Task
+      runAfter:
+        - "download-image"
+    - name: upload-checked-downloaded-image
+      taskRef:
+        name: upload-image
+        kind: Task
+      runAfter:
+        - "check-downloaded-image"
+      params:
+        - name: destImageURL
+          value: "$(params.dest-registry)/$(params.IMAGE)"
+    - name: download-sourcecode
+      taskRef:
+        name: git-clone
+        kind: Task
+      runAfter:
+        - validate-inputs
+      params:
+        - name: url
+          value: "$(params.source-git-url-buildcode)"
+        - name: revision
+          value: "$(params.source-git-revision-buildcode)"
+    - name: check-sourcecode
+      taskRef:
+        name: check-sourcecode
+        kind: Task
+      runAfter:
+        - download-sourcecode
+    - name: upload-sourcecode
+      taskRef:
+        name: upload-sourcecode
+        kind: Task
+      runAfter:
+        - check-sourcecode
+      params:
+        - name: destGitUrl
+          value: $(params.dest-git-url-buildcode)
+    - name: "build-image"
+      taskRef:
+        name: buildah-1-9-0
+        kind: Task
+      runAfter:
+        - check-sourcecode
+      params:
+        # ToDo
+        - name: todo
+          value: todo
+    - name: download-manifests
+      taskRef:
+        name: git-clone
+        kind: Task
+      runAfter:
+        - "validate-inputs"
+      params:
+        - name: url
+          value: "$(params.source-git-url-buildcode)"
+        - name: revision
+          value: "$(params.source-git-revision-buildcode)"
+    - name: check-manifests
+      taskRef:
+        name: check-manifests
+        kind: Task
+      runAfter:
+        - download-manifests
+    - name: upload-manifests
+      taskRef:
+        name: upload-manifests
+        kind: Task
