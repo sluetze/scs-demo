@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: upload-image
+  name: check-image
 spec:
   steps:
     - name: check-this
