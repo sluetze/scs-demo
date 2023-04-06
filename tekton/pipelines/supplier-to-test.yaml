@@ -39,20 +39,28 @@ spec:
       description: name of the image which shall be build
 
   tasks:
-    - name: validate-inputs
+    - name: check-trusted-source
       taskRef:
-        name: inputs-validate
+        name: check-trusted-list
       params:
-        - name: source-fqdns
+        - name: elems
           value:
             - "$(params.source-git-url-buildcode)"
             - "$(params.source-git-url-manifest)"
             - "$(params.source-registry)"
-        - name: dest-fqdns
+        - name: list-url
+          value: https://raw.githubusercontent.com/sluetze/scs-demo/main/policy/trusted-suppliers.txt
+    - name: check-trusted-target
+      taskRef:
+        name: check-trusted-list
+      params:
+        - name: elems
           value:
             - "$(params.dest-git-url-buildcode)"
             - "$(params.dest-git-url-manifest)"
             - "$(params.dest-registry)"
+        - name: list-url
+          value: https://raw.githubusercontent.com/sluetze/scs-demo/main/policy/trusted-targets.txt
     - name: download-image
       taskRef:
         name: skopeo-copy
