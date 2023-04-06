@@ -110,15 +110,23 @@ metadata:
 users:
 - admin
 ---
-project: default
-source:
-  repoURL: 'https://github.com/sluetze/scs-demo'
-  path: tekton
-  targetRevision: HEAD
-destination:
-  server: 'https://kubernetes.default.svc'
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: scs-demo-pipeline
   namespace: scs-demo
-syncPolicy:
-  automated:
-    prune: true
-    selfHeal: true
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/sluetze/scs-demo'
+    path: tekton
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: scs-demo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
