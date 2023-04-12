@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: scs-check-manifests
+  name: scs-check-sourcecode
   namespace: scs-demo
 spec:
   description: |
