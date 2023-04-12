@@ -1,0 +1,101 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: scs-check-manifests
+  namespace: scs-demo
+spec:
+  description: |
+    This pipeline checks an collection of manifests according to BSI Requirements. It expects the manifests to be in the workspace
+  params:
+    - name: deployment-name
+      type: string
+      description: name of the deployment to be patched
+    - name: source-git-url-manifest
+      type: string
+      description: url of the source git where the manifests are
+    - name: source-git-revision-manifest
+      type: string
+      description: revision of the source manifest git
+    - name: source-git-url-buildcode
+      type: string
+      description: url of the source git where the sourcecode for the application resides
+    - name: source-git-revision-buildcode
+      type: string
+      description: revision of the source application git
+    - name: source-registry
+      type: string
+      description: name of the source registry
+    - name: dest-git-url-manifest
+      type: string
+      description: url of the dest git where the manifests are
+    - name: dest-git-url-buildcode
+      type: string
+      description: url of the dest git where the sourcecode for the application resides
+    - name: dest-registry
+      type: string
+      description: name of the dest registry
+    - name: IMAGE
+      type: string
+      description: name of the image which shall be build
+    - name: protection-need
+      type: string
+      description: Need for Protection of the Application/Environment
+
+  tasks:
+    - name: SBOM Check
+      taskRef:
+        name: placeholder-returnzero
+    - name: CVE-Scan
+      taskRef:
+        name: placeholder-returnzero
+    - name: AV-Scan
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A3
+    - name: Deprecated Base Image
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A6
+    - name: Check Labels
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A6
+    - name: Check Versioning
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A8
+    - name: Check for Secrets
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A11
+    # SYS.1.6.A14
+    # SYS.1.6.A16
+    - name: Check for forbidden Packages
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A16
+    - name: Check for forbidden Ports
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A3
+    # APP.4.4.A11
+    - name: Check for Health-Check
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A12
+    - name: Check Metadata
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A12
+    - name: Check Signatures
+      taskRef:
+        name: placeholder-returnzero

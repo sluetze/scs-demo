@@ -1,0 +1,100 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: scs-check-manifests
+  namespace: scs-demo
+spec:
+  description: |
+    This pipeline checks an collection of manifests according to BSI Requirements. It expects the manifests to be in the workspace
+  params:
+    - name: IMAGE
+      type: string
+      description: name of the image which shall be build
+    - name: protection-need
+      type: string
+      description: Need for Protection of the Application/Environment
+
+  tasks:
+    # SYS.1.6.A3
+    - name: Check for Healthcheck
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A5
+    # APP.4.4.A4
+    # APP.4.4.A7
+    # APP.4.4.A18
+    - name: Check Network Policies
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A8
+    - name: Check for Secrets
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A15
+    - name: Check for Limits/Requests
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A16
+    - name: Check for forbidden Ports
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A17
+    # APP.4.4.A4
+    - name: Check Capabilities and SCC
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A19
+    - name: Check Usage of local Storage
+      taskRef:
+        name: placeholder-returnzero
+
+    # SYS.1.6.A23
+    - name: Check ReadOnly FileSystem
+      taskRef:
+        name: placeholder-returnzero
+      when:
+        - input: hoch
+          operator: in
+          values:
+            - "$(params.protection-need)"
+
+    # SYS.1.6.A25
+    - name: Check for Affinity/Antiaffinity
+      taskRef:
+        name: placeholder-returnzero
+      when:
+        - input: hoch
+          operator: in
+          values:
+            - "$(params.protection-need)"
+
+    # SYS.1.6.A26
+    - name: Check for Nodelabels
+      taskRef:
+        name: placeholder-returnzero
+      when:
+        - input: hoch
+          operator: in
+          values:
+            - "$(params.protection-need)"
+
+    # APP.4.4.A9
+    - name: Check Reason for Serviceaccount
+      taskRef:
+        name: placeholder-returnzero
+
+    # APP.4.4.A9
+    - name: Check Usage of default Serviceaccount
+      taskRef:
+        name: placeholder-returnzero
+
+    # APP.4.4.A9
+    - name: Check Usage of specific Serviceaccount
+      taskRef:
+        name: placeholder-returnzero

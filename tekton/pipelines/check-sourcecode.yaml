@@ -1,0 +1,23 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: scs-check-manifests
+  namespace: scs-demo
+spec:
+  description: |
+    This pipeline checks an collection of manifests according to BSI Requirements. It expects the manifests to be in the workspace
+  params:
+    - name: IMAGE
+      type: string
+      description: name of the image which shall be build
+    - name: protection-need
+      type: string
+      description: Need for Protection of the Application/Environment
+
+  tasks:
+    - name: Check for Secrets
+      taskRef:
+        name: placeholder-returnzero
+    - name: Run Kube-linter
+      taskRef:
+        name: placeholder-returnzero

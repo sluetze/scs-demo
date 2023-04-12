@@ -66,13 +66,14 @@ spec:
         name: skopeo-copy
         kind: Task
       runAfter:
-        - "validate-inputs"
+        - check-trusted-target
+        - check-trusted-source
       params:
         - name: srcImageURL
           value: "$(params.source-registry)/$(params.IMAGE)"
         - name: destImageURL
           value: "$(params.dest-registry)/$(params.IMAGE)"
-    - name: check-downloaded-image
+    - name: start-check-downloaded-image
       taskRef:
         name: check-image
         kind: Task
@@ -83,7 +84,7 @@ spec:
         name: upload-image
         kind: Task
       runAfter:
-        - "check-downloaded-image"
+        - start-check-downloaded-image
       params:
         - name: destImageURL
           value: "$(params.dest-registry)/$(params.IMAGE)"
@@ -92,13 +93,14 @@ spec:
         name: git-clone
         kind: Task
       runAfter:
-        - validate-inputs
+        - check-trusted-target
+        - check-trusted-source
       params:
         - name: url
           value: "$(params.source-git-url-buildcode)"
         - name: revision
           value: "$(params.source-git-revision-buildcode)"
-    - name: check-sourcecode
+    - name: start-check-sourcecode
       taskRef:
         name: check-sourcecode
         kind: Task
@@ -109,7 +111,7 @@ spec:
         name: upload-sourcecode
         kind: Task
       runAfter:
-        - check-sourcecode
+        - start-check-sourcecode
       params:
         - name: destGitUrl
           value: $(params.dest-git-url-buildcode)
@@ -118,7 +120,7 @@ spec:
         name: buildah-1-9-0
         kind: Task
       runAfter:
-        - check-sourcecode
+        - start-check-sourcecode
       params:
         # ToDo
         - name: todo
@@ -128,7 +130,8 @@ spec:
         name: git-clone
         kind: Task
       runAfter:
-        - "validate-inputs"
+        - check-trusted-target
+        - check-trusted-source
       params:
         - name: url
           value: "$(params.source-git-url-buildcode)"
@@ -144,3 +147,5 @@ spec:
       taskRef:
         name: upload-manifests
         kind: Task
+      runAfter:
+        - check-manifests
