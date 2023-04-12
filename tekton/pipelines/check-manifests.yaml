@@ -16,7 +16,7 @@ spec:
 
   tasks:
     # SYS.1.6.A3
-    - name: Check for Healthcheck
+    - name: check-for-healthcheck
       taskRef:
         name: placeholder-returnzero
 
@@ -24,38 +24,38 @@ spec:
     # APP.4.4.A4
     # APP.4.4.A7
     # APP.4.4.A18
-    - name: Check Network Policies
+    - name: check-network-policies
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A8
-    - name: Check for Secrets
+    - name: check-for-secrets
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A15
-    - name: Check for Limits/Requests
+    - name: check-for-limits-requests
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A16
-    - name: Check for forbidden Ports
+    - name: check-for-forbidden-ports
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A17
     # APP.4.4.A4
-    - name: Check Capabilities and SCC
+    - name: check-capabilities-and-scc
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A19
-    - name: Check Usage of local Storage
+    - name: check-usage-of-local-storage
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A23
-    - name: Check ReadOnly FileSystem
+    - name: check-readonly-filesystem
       taskRef:
         name: placeholder-returnzero
       when:
@@ -65,7 +65,7 @@ spec:
             - "$(params.protection-need)"
 
     # SYS.1.6.A25
-    - name: Check for Affinity/Antiaffinity
+    - name: check-for-affinity-antiaffinity
       taskRef:
         name: placeholder-returnzero
       when:
@@ -75,7 +75,7 @@ spec:
             - "$(params.protection-need)"
 
     # SYS.1.6.A26
-    - name: Check for Nodelabels
+    - name: check-for-nodelabels
       taskRef:
         name: placeholder-returnzero
       when:
@@ -85,16 +85,16 @@ spec:
             - "$(params.protection-need)"
 
     # APP.4.4.A9
-    - name: Check Reason for Serviceaccount
+    - name: check-reason-for-serviceaccount
       taskRef:
         name: placeholder-returnzero
 
     # APP.4.4.A9
-    - name: Check Usage of default Serviceaccount
+    - name: check-usage-of-default-serviceaccount
       taskRef:
         name: placeholder-returnzero
 
     # APP.4.4.A9
-    - name: Check Usage of specific Serviceaccount
+    - name: check-usage-of-specific-serviceaccount
       taskRef:
         name: placeholder-returnzero

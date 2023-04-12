@@ -42,60 +42,60 @@ spec:
       description: Need for Protection of the Application/Environment
 
   tasks:
-    - name: SBOM Check
+    - name: sbom-check
       taskRef:
         name: placeholder-returnzero
-    - name: CVE-Scan
+    - name: cve-scan
       taskRef:
         name: placeholder-returnzero
-    - name: AV-Scan
+    - name: av-scan
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A3
-    - name: Deprecated Base Image
+    - name: deprecated-base-image
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A6
-    - name: Check Labels
+    - name: check-labels
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A6
-    - name: Check Versioning
+    - name: check-versioning
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A8
-    - name: Check for Secrets
+    - name: check-for-secrets
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A11
     # SYS.1.6.A14
     # SYS.1.6.A16
-    - name: Check for forbidden Packages
+    - name: check-for-forbidden-packages
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A16
-    - name: Check for forbidden Ports
+    - name: check-for-forbidden-ports
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A3
     # APP.4.4.A11
-    - name: Check for Health-Check
+    - name: check-for-health-check
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A12
-    - name: Check Metadata
+    - name: check-metadata
       taskRef:
         name: placeholder-returnzero
 
     # SYS.1.6.A12
-    - name: Check Signatures
+    - name: check-signatures
       taskRef:
         name: placeholder-returnzero

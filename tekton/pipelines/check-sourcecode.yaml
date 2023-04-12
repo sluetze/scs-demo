@@ -15,9 +15,9 @@ spec:
       description: Need for Protection of the Application/Environment
 
   tasks:
-    - name: Check for Secrets
+    - name: check-for-secrets
       taskRef:
         name: placeholder-returnzero
-    - name: Run Kube-linter
+    - name: run-kube-linter
       taskRef:
         name: placeholder-returnzero
