@@ -1,0 +1,12 @@
+# This task
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: check-image
+spec:
+  steps:
+    - name: check-this
+      image: ubi9-minimal:9.1
+      script: |
+        #!/usr/bin/env bash
+        exit 0
