@@ -4,6 +4,9 @@ metadata:
   name: scs-download-from-supplier
   namespace: scs-demo
 spec:
+  workspaces:
+    - name: image-dir
+    - name: sourcecode-dir
   description: |
     This pipeline checks the supplied parameters if the source is valid, downloads the artifacts and starts the security checks
   params:
@@ -70,9 +73,12 @@ spec:
         - check-trusted-source
       params:
         - name: srcImageURL
-          value: "$(params.source-registry)/$(params.IMAGE)"
+          value: "docker://$(params.source-registry)/$(params.IMAGE)"
         - name: destImageURL
-          value: "$(params.dest-registry)/$(params.IMAGE)"
+          value: dir:/$(params.IMAGE)"
+      workspaces:
+        - name: image-dir
+          workspace: image-dir
     - name: start-check-downloaded-image
       taskRef:
         name: check-image
