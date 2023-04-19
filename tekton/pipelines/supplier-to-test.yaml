@@ -53,7 +53,7 @@ spec:
     - name: dest-registry
       type: string
       description: name of the dest registry. It has to start with docker://
-      default: docker://github.com/sluetze/scs-dest-buildcode
+      default: docker://quay.io/sluetzen/ubi9-test:latest
     # muss Array sein fuer multiple Images
     - name: IMAGE
       type: string
