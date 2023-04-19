@@ -16,27 +16,35 @@ spec:
     - name: source-git-url-manifest
       type: string
       description: url of the source git where the manifests are
+      default: NONE
     - name: source-git-revision-manifest
       type: string
       description: revision of the source manifest git
+      default: HEAD
     - name: source-git-url-buildcode
       type: string
       description: url of the source git where the sourcecode for the application resides
     - name: source-git-revision-buildcode
       type: string
       description: revision of the source application git
+      default: HEAD
     - name: source-registry
       type: string
       description: name of the source registry
+      default: quay.io/sluetzen
     - name: dest-git-url-manifest
       type: string
       description: url of the dest git where the manifests are
+      default: github.com/sluetze/scs-dest-manifest
     - name: dest-git-url-buildcode
       type: string
       description: url of the dest git where the sourcecode for the application resides
+      default: github.com/sluetze/scs-dest-buildcode
     - name: dest-registry
       type: string
       description: name of the dest registry
+      default: github.com/sluetze/scs-dest-buildcode
+    # muss ggf. Array sein fuer multiple Images
     - name: IMAGE
       type: string
       description: name of the image which shall be build
