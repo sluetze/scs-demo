@@ -7,6 +7,7 @@ spec:
   workspaces:
     - name: image-dir
     - name: sourcecode-dir
+    - name: manifest-dir
   description: |
     This pipeline checks the supplied parameters if the source is valid, downloads the artifacts and starts the security checks
   params:
@@ -56,6 +57,8 @@ spec:
       default: ubi9:latest
 
   tasks:
+    # Before we start doing anything, we validate if the sources are allowed
+    # SYS.1.6.A6
     - name: check-trusted-source
       taskRef:
         name: check-trusted-list
@@ -78,6 +81,8 @@ spec:
             - "$(params.dest-registry)"
         - name: list-url
           value: https://raw.githubusercontent.com/sluetze/scs-demo/main/policy/trusted-targets.txt
+
+    # Image Flow
     - name: download-image
       taskRef:
         name: skopeo-copy
@@ -93,6 +98,8 @@ spec:
       workspaces:
         - name: image-dir
           workspace: image-dir
+        - name: images-url
+          emptyDir: {}
     - name: start-check-downloaded-image
       taskRef:
         name: tkn
@@ -108,6 +115,8 @@ spec:
       params:
         - name: destImageURL
           value: "$(params.dest-registry)/$(params.IMAGE)"
+
+    # SourceCode Flow
     - name: download-sourcecode
       taskRef:
         name: git-clone
@@ -120,6 +129,9 @@ spec:
           value: "$(params.source-git-url-buildcode)"
         - name: revision
           value: "$(params.source-git-revision-buildcode)"
+      workspaces:
+        - name: output
+          workspace: sourcecode-dir
     - name: start-check-sourcecode
       taskRef:
         name: tkn
@@ -149,6 +161,14 @@ spec:
       params:
         - name: IMAGE
           value: "$(params.dest-registry)/$(params.IMAGE)"
+      workspaces:
+        - name: source
+          workspace: sourcecode-dir
+
+    # Manifest Flow
+    # Download
+    # Check
+    # Upload
     - name: download-manifests
       taskRef:
         name: git-clone
@@ -161,6 +181,9 @@ spec:
           value: "$(params.source-git-url-buildcode)"
         - name: revision
           value: "$(params.source-git-revision-buildcode)"
+      workspaces:
+        - name: output
+          workspace: manifest-dir
     - name: check-manifests
       taskRef:
         name: tkn
