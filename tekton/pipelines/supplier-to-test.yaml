@@ -16,7 +16,9 @@ spec:
     - name: source-git-url-manifest
       type: string
       description: url of the source git where the manifests are
-      default: NONE
+      default: https://github.com/sluetze/example-voting-app
+      # default: NONE
+      # Later it'll be NONE to skip if needed
     - name: source-git-revision-manifest
       type: string
       description: revision of the source manifest git
@@ -24,6 +26,9 @@ spec:
     - name: source-git-url-buildcode
       type: string
       description: url of the source git where the sourcecode for the application resides
+      default: https://github.com/sluetze/example-voting-app
+      # default: NONE
+      # Later it'll be NONE to skip if needed
     - name: source-git-revision-buildcode
       type: string
       description: revision of the source application git
@@ -31,7 +36,7 @@ spec:
     - name: source-registry
       type: string
       description: name of the source registry
-      default: quay.io/sluetzen
+      default: quay.io/sluetzen/ubi9:latest
     - name: dest-git-url-manifest
       type: string
       description: url of the dest git where the manifests are
@@ -44,10 +49,11 @@ spec:
       type: string
       description: name of the dest registry
       default: github.com/sluetze/scs-dest-buildcode
-    # muss ggf. Array sein fuer multiple Images
+    # muss Array sein fuer multiple Images
     - name: IMAGE
       type: string
       description: name of the image which shall be build
+      default: ubi9:latest
 
   tasks:
     - name: check-trusted-source
