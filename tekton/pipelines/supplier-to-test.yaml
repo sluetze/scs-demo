@@ -20,7 +20,7 @@ spec:
       description: name of the deployment to be patched
     - name: source-git-url-manifest
       type: string
-      description: url of the source git where the manifests are
+      description: url of the source git where the manifests are.  It has to start with https://
       default: https://github.com/sluetze/example-voting-app
       # default: NONE
       # Later it'll be NONE to skip if needed
@@ -30,7 +30,7 @@ spec:
       default: HEAD
     - name: source-git-url-buildcode
       type: string
-      description: url of the source git where the sourcecode for the application resides
+      description: url of the source git where the sourcecode for the application resides.  It has to start with https://
       default: https://github.com/sluetze/example-voting-app
       # default: NONE
       # Later it'll be NONE to skip if needed
@@ -41,19 +41,19 @@ spec:
     - name: source-registry
       type: string
       description: name of the source registry
-      default: quay.io/sluetzen/ubi9:latest
+      default: docker://quay.io/sluetzen/ubi9:latest
     - name: dest-git-url-manifest
       type: string
-      description: url of the dest git where the manifests are
-      default: github.com/sluetze/scs-dest-manifest
+      description: url of the dest git where the manifests are. It has to start with https://
+      default: https://github.com/sluetze/scs-dest-manifest
     - name: dest-git-url-buildcode
       type: string
-      description: url of the dest git where the sourcecode for the application resides
-      default: github.com/sluetze/scs-dest-buildcode
+      description: url of the dest git where the sourcecode for the application resides.  It has to start with https://
+      default: https://github.com/sluetze/scs-dest-buildcode
     - name: dest-registry
       type: string
-      description: name of the dest registry
-      default: github.com/sluetze/scs-dest-buildcode
+      description: name of the dest registry. It has to start with docker://
+      default: docker://github.com/sluetze/scs-dest-buildcode
     # muss Array sein fuer multiple Images
     - name: IMAGE
       type: string

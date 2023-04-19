@@ -1,3 +1,4 @@
 docker://registry.redhat.com
+docker://quay.io
 https://github.com/openshift
 https://github.com/sluetze

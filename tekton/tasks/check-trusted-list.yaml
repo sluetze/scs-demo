@@ -41,11 +41,11 @@ spec:
           # ToDo add git ssh possibility
           else
             echo "invalid element $elem"
-            return 1
+            exit 1
           fi
 
-          if [ $? -ne 0]; then
+          if [ $? -ne 0 ]; then
             echo '$compare not in list'
-            return 1
+            exit 1
           fi
         done
