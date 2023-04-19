@@ -8,6 +8,10 @@ spec:
     - name: image-dir
     - name: sourcecode-dir
     - name: manifest-dir
+    - name: images-url
+      description: |
+        Define a Configmap to provide a list of URLs for syncing
+        Define a emptyDir if you do not need multiple URLs.
   description: |
     This pipeline checks the supplied parameters if the source is valid, downloads the artifacts and starts the security checks
   params:
@@ -99,7 +103,7 @@ spec:
         - name: image-dir
           workspace: image-dir
         - name: images-url
-          emptyDir: {}
+          workspace: images-url
     - name: start-check-downloaded-image
       taskRef:
         name: tkn
