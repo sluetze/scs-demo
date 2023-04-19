@@ -119,6 +119,11 @@ spec:
       params:
         - name: destImageURL
           value: "$(params.dest-registry)/$(params.IMAGE)"
+      workspaces:
+        - name: image-dir
+          workspace: image-dir
+        - name: images-url
+          workspace: images-url
 
     # SourceCode Flow
     - name: download-sourcecode
