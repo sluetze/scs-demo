@@ -36,7 +36,7 @@ spec:
             # https://github.com/company/projecta/projectb will be shortened to
             # https://github.com/company and compared afterwards
 
-            compare=`echo $elem | cut -d/ -f 1-4
+            compare=`echo $elem | cut -d/ -f 1-4`
             grep $compare $list
           # ToDo add git ssh possibility
           else
