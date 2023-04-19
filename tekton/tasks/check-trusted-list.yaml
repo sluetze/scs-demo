@@ -11,6 +11,10 @@ spec:
     - name: list-url
       type: string
       description: webaddress, where the source of trusted entities is residing
+    - name: verbose
+      type: string
+      description: Switch to turn on verbose mode
+      default: "true"
   steps:
     # we need to define two steps with similar functionality, since tekton does not support arrays in script blocks
     # https://github.com/tektoncd/pipeline/issues/2374
@@ -19,18 +23,22 @@ spec:
       args: [ "$(params.elems[*])" ]
       script: |
         #!/usr/bin/env bash
+        if [[ $(params.verbose) = "true" ]]; then
+          set -x
+        fi
         curl -s $(params.list-url) -o trusted.txt
 
         for elem in $@; do
           list=trusted.txt
-
-          if [[ $elem =~ "^docker://" ]]; then
+          dockerregex="^docker://"
+          httpsregex="^https://"
+          if [[ $elem =~ $dockerregex ]]; then
             # we only extract the registry name for the moment
             # thus you won't be able to whitelist specific repositories on i.e. dockerhub
             compare=`echo $elem | cut -d: -f2 | cut -d/ -f3`
             grep $compare $list
 
-          elif [[ $elem =~ "^https://" ]]; then
+          elif [[ $elem =~ $httpsregex ]]; then
             # we allow git sources to be specified at a toplevel
             # for other schematas adapt the code
             # https://github.com/company/projecta/projectb will be shortened to
