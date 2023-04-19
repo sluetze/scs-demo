@@ -95,13 +95,13 @@ spec:
           workspace: image-dir
     - name: start-check-downloaded-image
       taskRef:
-        name: check-image
+        name: tkn
         kind: Task
       runAfter:
         - "download-image"
     - name: upload-checked-downloaded-image
       taskRef:
-        name: upload-image
+        name: skopeo-copy
         kind: Task
       runAfter:
         - start-check-downloaded-image
@@ -122,29 +122,33 @@ spec:
           value: "$(params.source-git-revision-buildcode)"
     - name: start-check-sourcecode
       taskRef:
-        name: check-sourcecode
+        name: tkn
         kind: Task
       runAfter:
         - download-sourcecode
     - name: upload-sourcecode
       taskRef:
-        name: upload-sourcecode
+        name: git-cli
         kind: Task
       runAfter:
         - start-check-sourcecode
       params:
-        - name: destGitUrl
-          value: $(params.dest-git-url-buildcode)
+        - name: GIT_SCRIPT
+          value: |
+            git remote add downstream $(params.dest-git-url-buildcode)
+            git push downstream main
+      workspaces:
+        - name: source
+          workspace: sourcecode-dir
     - name: "build-image"
       taskRef:
-        name: buildah-1-9-0
+        name: buildah
         kind: Task
       runAfter:
         - start-check-sourcecode
       params:
-        # ToDo
-        - name: todo
-          value: todo
+        - name: IMAGE
+          value: "$(params.dest-registry)/$(params.IMAGE)"
     - name: download-manifests
       taskRef:
         name: git-clone
@@ -159,13 +163,21 @@ spec:
           value: "$(params.source-git-revision-buildcode)"
     - name: check-manifests
       taskRef:
-        name: check-manifests
+        name: tkn
         kind: Task
       runAfter:
         - download-manifests
     - name: upload-manifests
       taskRef:
-        name: upload-manifests
+        name: git-cli
         kind: Task
       runAfter:
         - check-manifests
+      params:
+        - name: GIT_SCRIPT
+          value: |
+            git remote add downstream $(params.dest-git-url-buildcode)
+            git push downstream main
+      workspaces:
+        - name: source
+          workspace: sourcecode-dir
