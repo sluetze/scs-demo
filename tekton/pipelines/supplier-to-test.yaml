@@ -99,7 +99,7 @@ spec:
         - name: srcImageURL
           value: "$(params.source-registry)/$(params.IMAGE):$(params.TAG)"
         - name: destImageURL
-          value: "dir:/$(params.IMAGE)"
+          value: "dir:/imagedir/$(params.IMAGE)"
       workspaces:
         - name: image-dir
           workspace: image-dir
@@ -119,7 +119,7 @@ spec:
         - start-check-downloaded-image
       params:
         - name: srcImageURL
-          value: "dir:/$(params.IMAGE)"
+          value: "dir:/imagedir/$(params.IMAGE)"
         - name: destImageURL
           value: "$(params.dest-registry)/$(params.IMAGE):$(params.TAG)"
       workspaces:
