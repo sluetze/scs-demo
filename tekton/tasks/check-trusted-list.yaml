@@ -48,5 +48,4 @@ spec:
             echo '$compare not in list'
             return 1
           fi
-          }
         done
