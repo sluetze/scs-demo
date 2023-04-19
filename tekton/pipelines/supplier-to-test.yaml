@@ -41,7 +41,7 @@ spec:
     - name: source-registry
       type: string
       description: name of the source registry
-      default: docker://quay.io/sluetzen/ubi9:latest
+      default: docker://quay.io/sluetzen
     - name: dest-git-url-manifest
       type: string
       description: url of the dest git where the manifests are. It has to start with https://
@@ -53,12 +53,16 @@ spec:
     - name: dest-registry
       type: string
       description: name of the dest registry. It has to start with docker://
-      default: docker://quay.io/sluetzen/ubi9-test:latest
+      default: docker://quay.io/sluetzen
     # muss Array sein fuer multiple Images
     - name: IMAGE
       type: string
       description: name of the image which shall be build
       default: ubi9:latest
+    - name: TAG
+      type: string
+      description: tag for the image if it should be specified
+      default: ""
 
   tasks:
     # Before we start doing anything, we validate if the sources are allowed
@@ -96,9 +100,9 @@ spec:
         - check-trusted-source
       params:
         - name: srcImageURL
-          value: "docker://$(params.source-registry)/$(params.IMAGE)"
+          value: "docker://$(params.source-registry)/$(params.IMAGE):$(params.TAG)"
         - name: destImageURL
-          value: dir:/$(params.IMAGE)"
+          value: "dir:/$(params.IMAGE)"
       workspaces:
         - name: image-dir
           workspace: image-dir
@@ -117,8 +121,10 @@ spec:
       runAfter:
         - start-check-downloaded-image
       params:
+        - name: srcImageURL
+          value: "dir:/$(params.IMAGE)"
         - name: destImageURL
-          value: "$(params.dest-registry)/$(params.IMAGE)"
+          value: "$(params.dest-registry)/$(params.IMAGE):$(params.TAG)"
       workspaces:
         - name: image-dir
           workspace: image-dir
