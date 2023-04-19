@@ -30,7 +30,7 @@ spec:
             compare=`echo $elem | cut -d: -f2 | cut -d/ -f3`
             grep $compare $list
 
-          elif [[ $elem =~ "^https://"]]; then
+          elif [[ $elem =~ "^https://" ]]; then
             # we allow git sources to be specified at a toplevel
             # for other schematas adapt the code
             # https://github.com/company/projecta/projectb will be shortened to
@@ -38,6 +38,7 @@ spec:
 
             compare=`echo $elem | cut -d/ -f 1-4
             grep $compare $list
+          # ToDo add git ssh possibility
           else
             echo "invalid element $elem"
             return 1
