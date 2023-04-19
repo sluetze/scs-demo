@@ -4,6 +4,8 @@ metadata:
   name: scs-download-from-supplier
   namespace: scs-demo
 spec:
+  description: |
+    This pipeline checks the supplied parameters if the source is valid, downloads the artifacts and starts the security checks
   workspaces:
     - name: image-dir
     - name: sourcecode-dir
@@ -12,12 +14,7 @@ spec:
       description: |
         Define a Configmap to provide a list of URLs for syncing
         Define a emptyDir if you do not need multiple URLs.
-  description: |
-    This pipeline checks the supplied parameters if the source is valid, downloads the artifacts and starts the security checks
   params:
-    - name: deployment-name
-      type: string
-      description: name of the deployment to be patched
     - name: source-git-url-manifest
       type: string
       description: url of the source git where the manifests are.  It has to start with https://
@@ -58,11 +55,11 @@ spec:
     - name: IMAGE
       type: string
       description: name of the image which shall be build
-      default: ubi9:latest
+      default: ubi9
     - name: TAG
       type: string
       description: tag for the image if it should be specified
-      default: ""
+      default: latest
 
   tasks:
     # Before we start doing anything, we validate if the sources are allowed
@@ -100,7 +97,7 @@ spec:
         - check-trusted-source
       params:
         - name: srcImageURL
-          value: "docker://$(params.source-registry)/$(params.IMAGE):$(params.TAG)"
+          value: "$(params.source-registry)/$(params.IMAGE):$(params.TAG)"
         - name: destImageURL
           value: "dir:/$(params.IMAGE)"
       workspaces:
