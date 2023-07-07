@@ -42,10 +42,3 @@ spec:
   source: redhat-operators
   sourceNamespace: openshift-marketplace
   startingCSV: rhacs-operator.v3.74.0
----
-apiVersion: operator.tekton.dev/v1alpha1
-kind: TektonChain
-metadata:
-  name: chain
-spec:
-  targetNamespace: openshift-pipelines
