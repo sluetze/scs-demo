@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="bykZPwmTV7TDKXL7TWVV" name="Overview">
-        <mxGraphModel dx="1234" dy="677" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1099" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -59,7 +59,7 @@
         </mxGraphModel>
     </diagram>
     <diagram name="Components Overview" id="MvOpBhTwl4kDiGbs9sfM">
-        <mxGraphModel dx="1234" dy="677" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1099" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="OwLjtcAos1v3Z1HTQsKP-0"/>
                 <mxCell id="OwLjtcAos1v3Z1HTQsKP-1" parent="OwLjtcAos1v3Z1HTQsKP-0"/>
@@ -91,7 +91,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="Cedur8wUUEsERy26Ivc2" name="Overview-Delivery">
-        <mxGraphModel dx="1234" dy="677" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+        <mxGraphModel dx="1099" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -219,7 +219,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="7yRsUrbVqnifvTdhcY4k" name="BSI-Supply-Chain">
-        <mxGraphModel dx="1234" dy="677" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1099" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -346,7 +346,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="9XWBpEy1meR_qe4aS7Hj" name="InternalProcessView">
-        <mxGraphModel dx="1234" dy="677" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1099" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -828,7 +828,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="pYR55TTQ8GlQclpcNnh3" name="Process-PullDelivery">
-        <mxGraphModel dx="1234" dy="677" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+        <mxGraphModel dx="2853" dy="837" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -945,6 +945,15 @@
                 </mxCell>
                 <mxCell id="H_pgNcaqZFPb_o-VVuZC-1" value="Lieferung im Pull Verfahren" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#003300;" parent="1" vertex="1">
                     <mxGeometry x="30" y="20" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="R7y5LMB7ehHZrP5QyXCw-1" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="150" y="370" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="R7y5LMB7ehHZrP5QyXCw-2" value="0...n" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="150" y="292" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="R7y5LMB7ehHZrP5QyXCw-3" value="0...n" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="130" y="195" width="60" height="30" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
