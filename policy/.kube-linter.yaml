@@ -1,0 +1,239 @@
+# This file defines checks to comply with BSI SYS.1.6 and APP.4.4
+# It disables all default checks, to only show issues which are related to this requirements
+# in the real world, you should ALSO run the default checks (i.e. in a separate Task)
+# Meaning there is a check does not mean, that you are completely compliant to the Requirement
+# It only means, that the parts, that are checkable with kube-linter are done
+# for transparency the relevant partial requirements are mentioned
+# if names beginn with a 3 digit number, it refers to a check of IG BvC
+# CUSTOMIZE comments indicate, you should review this for your environment
+
+# ToDo
+# APP.4.4.A3 Jeder Benutzer DARF NUR die unbedingt notwendigen Rechte erhalten.
+# We could add some checks for critical ressources like secrets which should raise alerts
+checks:
+  doNotAutoAddDefaults: true
+customChecks:
+  # SYS.1.6.A3 (Basis)
+  # Im laufenden Betrieb SOLLTEN die Performance und der Zustand der containerisierten IT-Systeme überwacht werden (sogenannte Health Checks).
+  # APP.4.4.A11 (Standard)
+  # In Pods SOLLTE jeder Container einen Health Check für den Start und den Betrieb („readiness“ und „liveness“) definieren.
+  # Diese Checks SOLLTEN Auskunft über die Verfügbarkeit der im Pod ausgeführten Software geben.
+  # Die Checks SOLLTEN fehlschlagen, wenn die überwachte Software ihre Aufgaben nicht ordnungsgemäß wahrnehmen kann.
+  # Für jede dieser Kontrollen SOLLTE eine dem im Pod betriebenen Dienst angemessene Zeitspanne definieren.
+  # Auf Basis dieser Checks SOLLTE Kubernetes die Pods löschen oder neu starten.
+  - name: require-health-checks-liveness
+    template: liveness-probe
+    remediation: "Bitte defin "
+  - name: require-health-checks-readiness
+    template: readiness-probe
+
+  # SYS.1.6.A5 (Basis)
+  # Es SOLLTEN nur die für den Betrieb notwendigen Kommunikationsbeziehungen erlaubt werden.
+  # APP.4.4.A4 (Basis)
+  # Der Betriebssystem-Kernel der Nodes MUSS über Isolationsmechanismen zur Beschränkung von Sichtbarkeit und Ressourcennutzung der Pods untereinander verfügen (vgl. Linux Namespaces und cgroups).
+  # Die Trennung MUSS dabei mindestens Prozess-IDs, Inter-Prozess-Kommunikation, Benutzer-IDs, Dateisystem und **Netz** inklusive Hostname umfassen.
+  # APP.4.4.A7  (Standard)
+  # Es SOLLTEN NUR die für den Betrieb notwendigen Netzports der Pods in die dafür vorgesehenen Netze freigegeben werden.
+  # Bei mehreren Anwendungen auf einem Kubernetes-Cluster SOLLTEN zunächst alle Netzverbindungen zwischen den Kubernetes-Namespaces untersagt und nur benötigte Netzverbindungen gestattet sein (Whitelisting).
+  # APP.4.4.A18 (erhoehter Schutzbedarf)
+  # Die Pods SOLLTEN auch innerhalb eines Kubernetes-Namespace nur über die notwendigen Netzports miteinander kommunizieren können.
+  # Diese Regeln SOLLTEN Quelle und Ziel der Verbindungen genau definieren und dafür mindestens eines der folgenden Kriterien nutzen: Service-Name, Metadaten („Labels"), die Kubernetes Service-Accounts oder zertifikatsbasierte Authentifizierung.
+  - name: disallow-unisolated-pods
+    template: non-isolated-pod
+
+  # SYS.1.6.A6
+  # Es MUSS sichergestellt sein, dass sämtliche verwendeten Images nur aus vertrauenswürdigen Quellen stammen.
+  - name: 004-restrict-image-registries
+    template: latest-tag
+    params:
+      allowList:
+        # CUSTOMIZE
+        # Example, if you trust images from Red Hat
+        - ^registry\.redhat\.io:.*$
+        - ^access\.redhat\.com:.*$
+
+  # Es MÜSSEN eindeutige Versionsnummern angegeben sein.
+  - name: 003-disallow-latest-tag
+    template: latest-tag
+    params:
+      blockList:
+        - .*:(latest)$
+        - ^[^:]*$
+        - (.*/[^:]+)$
+
+  # trying to get that into IG BvC
+  # https://gitlab.opencode.de/ig-bvc/ig-bvc-poc-2/ig-bvc-poc-ii-ap-4.1-ff-policy-entwicklung/richtlinien/-/issues/37
+  - name: require-versioning
+    template: latest-tag
+    params:
+      allowList:
+        # regex is derived from https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+        # Regex represents SemVer Versioning
+        - ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+        # CUSTOMIZE
+        # add additional Versioning schemes as required
+
+  # SYS.1.6.A8 (Standard)
+  # Zugangsdaten MÜSSEN so gespeichert und verwaltet werden, dass nur berechtigte Personen und Container darauf zugreifen können.
+  # Insbesondere MUSS sichergestellt sein, dass Zugangsdaten nur an besonders geschützten Orten und nicht in den Images liegen.
+  # Die von der Verwaltungssoftware des Containerdienstes bereitgestellten Verwaltungsmechanismen für Zugangsdaten SOLLTEN eingesetzt werden.
+  # Mindestens die folgenden Zugangsdaten MÜSSEN sicher gespeichert werden:
+  #   * Passwörter jeglicher Accounts,
+  #   * API-Keys für von der Anwendung genutzte Dienste,
+  #   * Schlüssel für symmetrische Verschlüsselungen sowie
+  #   * private Schlüssel bei Public-Key-Authentisierung.
+  - name: 005-disallow-secrets-in-env
+    template: env-var
+    params:
+      # ?i enables case insensitive lookup
+      name: (?i).*SECRET.*|.*PASSWORD.*|.*PASSWORT.*|.*KEY.*|.*KENNWORT.*|.*TOKEN.*
+      value: .+
+  - name: disallow-secret-ref
+    template: read-secret-from-env-var
+  - name: disallow-access-to-secrets
+    template: access-to-resources
+    params:
+      resources:
+        - ^secrets$
+      verbs:
+        - ^get$
+        - ^list$
+        - ^delete$
+        - ^create$
+        - ^watch$
+        - ^*$
+
+  # SYS.1.6.A15 (Standard)
+  # Für jeden Container SOLLTEN Ressourcen auf dem Host-System, wie CPU, flüchtiger und persistenter Speicher sowie Netzbandbreite, angemessen reserviert und limitiert werden.
+  - name: 001-require-resource-limits-cpu
+    template: cpu-requirements
+    params:
+      # this paramset requires limits and requests to be set to any value
+      lowerBoundMillis: 0
+      requirementsType: any
+      upperBoundMillis: 0
+  - name: 001-require-resource-limits-memory
+    template: memory-requirements
+    params:
+      lowerBoundMB: 0
+      requirementsType: any
+      upperBoundMB: 0
+
+# SYS.1.6.A16 (Standard)
+  # Applikations-Container SOLLTEN keine Fernwartungszugänge enthalten.
+  - name: disallow-remote-administration-ssh
+    template: ports
+    params:
+      port: 22
+      protocol: TCP
+  - name: disallow-remote-administration-rdp
+    template: ports
+    params:
+      port: 3389
+      protocol: TCP
+  - name: disallow-remote-administration-vnc
+    template: ports
+    params:
+      port: 5900
+      protocol: TCP
+
+
+  # SYS.1.6.A17 (Standard)
+  # Sofern Container ausnahmsweise Aufgaben des Host-Systems übernehmen sollen, SOLLTEN die Privilegien auf dem Host-System auf das erforderliche Minimum begrenzt werden.
+  # Ausnahmen SOLLTEN angemessen dokumentiert werden.
+  - name: 013-require-run-as-non-root
+    template: run-as-non-root
+    remediation: Set runAsUser to a non-zero number and runAsNonRoot to true in your pod or container securityContext. Refer to https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ for details.
+  - name: 014-require-drop-capabilities
+    template: verify-container-capabilities
+    params:
+      forbiddenCapabilities:
+        - all
+      # CUSTOMIZE
+      # You should extend the list of exceptions, if you discover specific capabilities to be added.
+      # exceptions:
+    remediation: "containers must not add capabilities. if there is no other way, contact with security team and add the annotation ignore-check.kube-linter.io/014-require-drop-capabilities: <REASON>"
+  - name: 015-disallow-privileged-containers
+    template: privileged
+    remediation: "privileged containers are forbidden. if there is no other way, contact with security team and add the annotation ignore-check.kube-linter.io/015-disallow-privileged-containers: <REASON>"
+  - name: 016-disallow-privilege-escalation
+    template: privilege-escalation-container
+    remediation: "privilege escalation is forbidden. if there is no other way, contact with security team and add the annotation ignore-check.kube-linter.io/016-disallow-privilege-escalation: <REASON>"
+
+  - name: disallow-host-ipc
+    template: host-ipc
+    remediation: Ensure the host's IPC namespace is not shared.
+  - name: disallow-host-network
+    template: host-network
+    remediation: Ensure the host's network namespace is not shared.
+  - name: disallow-host-pid
+    template: host-pid
+    remediation: Ensure the host's process namespace is not shared.
+
+  # SYS.1.6.A19 (Standard)
+  # Die Container SOLLTEN NUR auf die für den Betrieb notwendigen Massenspeicher und Verzeichnisse zugreifen können.
+  # Sofern die Container-Runtime für einen Container lokalen Speicher einbindet, SOLLTEN die Zugriffsrechte im Dateisystem auf den Service-Account des Containers eingeschränkt sein.
+  - name: 009-disallow-hostpath
+    template: writable-host-mount
+  - name: disallow-sensitive-hostmounts
+    template: host-mounts
+    param:
+      dirs:
+        - ^/$
+        - ^/boot$
+        - ^/dev$
+        - ^/etc$
+        - ^/lib$
+        - ^/proc$
+        - ^/sys$
+        - ^/usr$
+  - name: disallow-docker-sock
+    template: host-mounts
+    param:
+      dirs:
+        - docker.sock$
+
+  # SYS.1.6.A23 (erhoehter Schutzbedarf)
+  # Container SOLLTEN ihr Dateisystem während der Laufzeit nicht verändern können.
+  # Dateisysteme SOLLTEN nicht mit Schreibrechten eingebunden sein.
+  - name: 012-require-readonly-rootfs
+    template: read-only-root-fs
+
+  # SYS.1.6.A25 (erhoehter Schutzbedarf)
+  # Bei hohen Verfügbarkeitsanforderungen der containerisierten Anwendungen SOLLTE entschieden werden, auf welcher Ebene die Verfügbarkeit realisiert werden soll (z. B. redundant auf der Ebene des Hosts).
+  - name: require-anti-affinity
+    template: anti-affinity
+    param:
+      minReplicas: 2
+      # CUSTOMIZE
+      topologyKey: 'kubernetes.io/hostname'
+
+  # APP.4.4.A3 (Basis)
+  # Kubernetes und alle anderen Anwendungen der Control Plane MÜSSEN jede Aktion eines Benutzers oder, im automatisierten Betrieb,
+  # einer entsprechenden Software authentifizieren und autorisieren, unabhängig davon, ob die Aktionen über einen Client, eine Weboberfläche oder über eine entsprechende Schnittstelle (API) erfolgt.
+  # Administrative Handlungen DÜRFEN NICHT anonym erfolgen.
+  - name: 008-require-serviceaccount-description
+    template: required-annotation
+    params:
+      # CUSTOMIZE
+      key: policies.opencode.de/description
+    scope:
+      objectKinds:
+        - ServiceAccount
+
+  # APP.4.4.A9 (Standard)
+  # Pods SOLLTEN NICHT den "default"-Service-Account nutzen. Dem "default"-Service-Account SOLLTEN keine Rechte eingeräumt werden.
+  # Pods für unterschiedliche Anwendungen SOLLTEN jeweils unter eigenen Service-Accounts laufen.
+  # Berechtigungen für die Service-Accounts der Pods der Anwendungen SOLLTEN auf die unbedingt notwendigen Rechte beschränkt werden.
+  # Pods, die keinen Service-Account benötigen, SOLLTEN diesen nicht einsehen können und keinen Zugriff auf entsprechende Token haben.
+  # Nur Pods der Control Plane und Pods, die diese unbedingt benötigen, SOLLTEN privilegierte Service-Accounts nutzen.
+  # Programme der Automatisierung SOLLTEN jeweils eigene Token erhalten, auch wenn sie aufgrund ähnlicher Aufgaben einen gemeinsamen Service-Account nutzen.
+  - name: 019-disallow-default-serviceaccount
+    template: service-account
+    params:
+      serviceAccount: ^(|default)$
+
+  # APP.4.4.A14 (Standard)
+  # In einem Kubernetes-Cluster SOLLTEN die Nodes dedizierte Aufgaben zugewiesen bekommen und jeweils nur Pods betreiben, welche der jeweiligen Aufgabe zugeordnet sind.
+  - name: 022-require-node-affinity
+    template: no-node-affinity
