@@ -23,9 +23,10 @@ customChecks:
   # Auf Basis dieser Checks SOLLTE Kubernetes die Pods löschen oder neu starten.
   - name: require-health-checks-liveness
     template: liveness-probe
-    remediation: "Bitte defin "
+    remediation: "Please define a Livness probe as described here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command"
   - name: require-health-checks-readiness
     template: readiness-probe
+    remediation: "please define a readiness probe as described here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes"
 
   # SYS.1.6.A5 (Basis)
   # Es SOLLTEN nur die für den Betrieb notwendigen Kommunikationsbeziehungen erlaubt werden.
@@ -49,8 +50,9 @@ customChecks:
       allowList:
         # CUSTOMIZE
         # Example, if you trust images from Red Hat
-        - ^registry\.redhat\.io:.*$
-        - ^access\.redhat\.com:.*$
+        - ^registry\.redhat\.io.*$
+        - ^access\.redhat\.com.*$
+        - ^registry\.opencode\.de.*$
 
   # Es MÜSSEN eindeutige Versionsnummern angegeben sein.
   - name: 003-disallow-latest-tag
